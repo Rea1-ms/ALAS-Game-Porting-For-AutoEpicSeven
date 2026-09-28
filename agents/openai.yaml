@@ -1,4 +1,6 @@
 interface:
   display_name: "ALAS Porting for AutoEpicSeven"
-  short_description: "Develop robust E7 automation with ALAS patterns"
-  default_prompt: "Use $alas-game-porting-for-autoepicseven to develop or review one AutoEpicSeven automation feature."
+  short_description: "Develop E7 automation with offline regression tests"
+  default_prompt: "Use $alas-game-porting-for-autoepicseven to develop, fix, or review AutoEpicSeven automation and verify changes through its registered offline test runner."
+policy:
+  allow_implicit_invocation: true

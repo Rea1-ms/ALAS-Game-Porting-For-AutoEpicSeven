@@ -102,6 +102,8 @@ def map_offensive(self, skip_first_screenshot=True):
 
 如果每一步都复用了上一张截图，那么第一张截图从何而来呢？在运行之前，需要显式地执行一次 `self.device.screenshot()` 。
 
+以上描述手动实机运行。正式离线测试先由公共辅助注入已登记的模拟首帧，后续截图调用只推进预定义帧序列，不为准备首帧连接真实设备。
+
 ```python
 self = Combat('alas')
 self.device.screenshot()

@@ -2,7 +2,7 @@
 
 面向 AutoEpicSeven（自动化项目）的 Codex skill（技能），用于开发、移植、审核和调试 ALAS（二代游戏自动化框架）风格的 E7 自动化功能。
 
-当前版本：v0.1（0.1 版本）
+当前版本：v0.2（0.2 版本）
 
 ## 适用范围
 
@@ -11,7 +11,7 @@
 - assets（识别资源）与 button extract（按钮资源生成）流程
 - OCR（光学字符识别）语言、后处理和资源栏识别
 - scheduler（调度器）、配置和 GUI（图形界面）接入
-- 截图测试、实机日志分析和回归检查
+- 离线回归、截图与流程回放、覆盖率、云端测试，以及实机日志分析
 
 本 skill（技能）面向 AutoEpicSeven（自动化项目）开发，不涉及 E7 游戏攻略、无关自动化项目或普通 Python（编程语言）问题。
 
@@ -21,7 +21,7 @@
 
 AutoEpicSeven（自动化项目）通过 git submodule（Git 子模块）引用指定版本。
 
-skill（技能）已经包含开发所需的状态循环规范、项目约束、wiki（规则整理）和开发经验，使用时不依赖额外资料。
+skill（技能）包含状态循环规范、项目约束、wiki（规则整理）、开发经验和离线测试规则。运行时仍需读取当前项目的验收计划、测试入口及清单，以实际代码和执行结果为准。
 
 ## 目录结构
 
@@ -34,7 +34,9 @@ alas-game-porting-for-autoepicseven/
 └── references/
     ├── autoepicseven-rules.md
     ├── asset-task-conventions.md
+    ├── asset-crop-tool.md
     ├── development-lessons.md
+    ├── offline-testing.md
     ├── skill-evals.md
     ├── state-loop-bible.md
     ├── task-checklist.md
@@ -45,10 +47,12 @@ alas-game-porting-for-autoepicseven/
 - `agents/openai.yaml`：Codex 展示名称、简介和默认调用提示。
 - `references/autoepicseven-rules.md`：AutoEpicSeven（自动化项目）的强制开发约束。
 - `references/asset-task-conventions.md`：asset name（资源名）、目录映射、task（任务）组织和入口定位规范。
+- `references/asset-crop-tool.md`：切图工具的入口、参数、交互、配方、输出目录和正式回归接入。
 - `references/state-loop-bible.md`：ALAS（自动化框架）状态循环完整规范。
 - `references/task-checklist.md`：新增或重写任务时的检查清单。
 - `references/development-lessons.md`：现有模块和实机排错经验。
 - `references/wiki-guidance.md`：识别、页面、异常、配置等框架原则。
+- `references/offline-testing.md`：正式测试分类、样本、回放、统一入口、报告、覆盖率和云端验收步骤。
 - `references/skill-evals.md`：触发边界和行为验收样例。
 
 ## 安装
@@ -100,10 +104,12 @@ git submodule update --init --recursive
 
 - Windows 11、PowerShell 7、UTF-8（统一编码）和 LF（换行）。
 - 业务代码只修改当前 worktree（工作树）。
-- 测试写入原始文件夹下被 git（版本控制）忽略的 `test/`，不写入当前 worktree（工作树）的同名目录。
+- 正式测试与精选脱敏截图在当前 worktree（工作树）的 `tests/` 入库；历史 `test/`、临时产物和真实配置继续忽略。
+- 修改识别和流程时默认读取测试规范，登记用例与样本，使用统一离线入口验证；缺图、缺模型和跳过都不算通过。
+- 本机和云端使用相同入口；当前云端为 Ubuntu 24.04（操作系统）与 Python 3.10.19（解释器版本），有真实运行记录才算完成云端验收。
 - 禁止删除文件，不手改生成配置和生成 assets wrapper（识别资源包装文件）。
 - 游戏交互使用截图驱动的状态循环，不使用固定 sleep（等待）推进流程。
 - assets（识别资源）语言与 OCR（光学字符识别）模型语言分开处理。
 - 配置生成器运行前需要用户批准。
 
-详细规则以 `SKILL.md` 和 `references/` 为准。
+详细规则以 `SKILL.md` 和 `references/` 为准。更新独立源码副本后也要核对当前实际加载的安装副本，保留两边已有改动；只改源码不会自动更新另一个目录。触发描述和默认读取路径帮助遵守规范，实际自动触发效果仍需用验收提示验证。
