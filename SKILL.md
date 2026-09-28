@@ -22,7 +22,7 @@ Version: 0.2 (2026-09-27)
 | --- | --- |
 | 新增或重写任务、交互流程 | `references/asset-task-conventions.md`、`references/task-checklist.md`、`references/state-loop-bible.md`、`references/development-lessons.md` |
 | 审核状态循环、死循环、点击时序 | `references/state-loop-bible.md`、`references/development-lessons.md` |
-| 新增页面、修改路由、按服务器注册页面 | `references/wiki-guidance.md` 的 Page/UI 与多服务器章节、`references/autoepicseven-rules.md` 的页面与分服章节 |
+| 新增页面、修改路由、按服务器注册页面 | `references/wiki-guidance.md` 的 Page/UI 与多服务器章节、`references/autoepicseven-rules.md` 的页面与分服章节、`references/development-lessons.md` 的页面与跨模块跳转章节 |
 | 新增或调整 assets、命名、目录或颜色/模板识别 | `references/asset-task-conventions.md`、`references/wiki-guidance.md` 的识别章节、`references/development-lessons.md` 的识别经验 |
 | 从截图切图、修改区域、多帧或配方重放 | `references/asset-crop-tool.md`（工具入口与用法）、`references/asset-task-conventions.md`；先预检再保存，定向生成包装 |
 | 定位任务入口、实现文件或 asset 来源 | `references/asset-task-conventions.md` 的入口检索与反向定位章节 |
@@ -82,6 +82,8 @@ Version: 0.2 (2026-09-27)
   -> `references/development-lessons.md#ocr-与资源采集`
 - 跨模块页面跳转优先 `ui_goto(Page)`，不要复用依赖隐含页面上下文的私有入口方法。
   -> `references/development-lessons.md#页面与跨模块跳转`
+- 页面识别成功不等于入口已定位；同服多模板不会在直接点击时自动选中。排查导航错点时，先检查路由是否实际匹配入口。
+  -> `references/development-lessons.md#导航直接点击与多模板入口`
 - 修改函数名、变量名或类名时，不执行全仓批量替换；汇总重命名映射并交给用户用 IDE 处理。
   -> `references/autoepicseven-rules.md#编辑边界`
 
