@@ -21,10 +21,10 @@
 
 单区域生成需要：图片、素材语言、完整模块路径、资源名、矩形、采样目录名和采样案例名。`--box`（矩形）格式为左、上、右、下四个整数，按原图坐标计算，右下边界不包含；不是位置加宽高。图片必须为 1280×720，工具不会自动缩放。
 
-最小可执行预览如下。所用样本在当前回归库中；资源名和矩形仅用于验证命令格式，不代表真实识别区域，不能去掉预检参数后直接用于业务：
+最小预览命令模板如下。先将尖括号内容替换为当前已核对的图片、完整模块路径和实际矩形，不依赖固定截图编号；示例资源名只用于预检，不能去掉预检参数直接用于业务：
 
 ```powershell
-.venv/Scripts/python.exe -B -m dev_tools.asset_crop make --image tests/fixtures/dimensional_exploration/MuMu-20260925-231015-103.png --namespace global_cn --module dimensional_exploration --name SKILL_CROP_PREVIEW --box 400,200,500,260 --suite skill_crop_preview --case help_example --dry-run --json
+.venv/Scripts/python.exe -B -m dev_tools.asset_crop make --image "<已核对截图路径>" --namespace global_cn --module "<完整模块路径>" --name SKILL_CROP_PREVIEW --box "<左,上,右,下>" --suite skill_crop_preview --case help_example --dry-run --json
 ```
 
 参数含义：`--image`（已有图片）、`--namespace`（素材语言空间）、`--module`（完整资源模块）、`--name`（资源名）、`--suite`（手动采样目录名）、`--case`（手动采样文件名）、`--json`（输出结构化结果）。采样目录名和文件名接受小写字母、数字、下划线及连字符，不是运行器的测试集或完整用例标识。

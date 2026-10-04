@@ -6,7 +6,7 @@ description: >
 
 # AutoEpicSeven ALAS Game Porting
 
-Version: 0.2 (2026-09-27)
+Version: 0.4 (2026-10-04)
 
 把 AutoEpicSeven 当作已经成熟的 E7 自动化项目直接开发。先读当前仓库代码、git 差异和本 skill 的参考资料。
 
@@ -21,12 +21,13 @@ Version: 0.2 (2026-09-27)
 | 当前工作 | 还要读取 |
 | --- | --- |
 | 新增或重写任务、交互流程 | `references/asset-task-conventions.md`、`references/task-checklist.md`、`references/state-loop-bible.md`、`references/development-lessons.md` |
-| 审核状态循环、死循环、点击时序 | `references/state-loop-bible.md`、`references/development-lessons.md` |
+| 审核状态循环、死循环、点击时序 | `references/state-loop-bible.md`、`references/development-lessons.md`；涉及选择或领奖时读取 `references/recognition-and-decision.md`（识别与决策经验） |
 | 新增页面、修改路由、按服务器注册页面 | `references/wiki-guidance.md` 的 Page/UI 与多服务器章节、`references/autoepicseven-rules.md` 的页面与分服章节、`references/development-lessons.md` 的页面与跨模块跳转章节 |
 | 新增或调整 assets、命名、目录或颜色/模板识别 | `references/asset-task-conventions.md`、`references/wiki-guidance.md` 的识别章节、`references/development-lessons.md` 的识别经验 |
 | 从截图切图、修改区域、多帧或配方重放 | `references/asset-crop-tool.md`（工具入口与用法）、`references/asset-task-conventions.md`；先预检再保存，定向生成包装 |
 | 定位任务入口、实现文件或 asset 来源 | `references/asset-task-conventions.md` 的入口检索与反向定位章节 |
-| OCR、资源栏、语言问题 | `references/autoepicseven-rules.md` 的 OCR 章节、`references/development-lessons.md` 的 OCR 经验 |
+| OCR、资源栏、语言问题 | `references/autoepicseven-rules.md` 的 OCR 章节、`references/development-lessons.md` 的 OCR 经验；字段完整性与资源含义见 `references/recognition-and-decision.md`（识别与决策经验） |
+| 滚动漏读、偏好回退、分阶段预算、集合属性决策、领奖或结果采样 | `references/recognition-and-decision.md`（识别与决策经验）、`references/offline-testing.md`（离线测试与验收） |
 | 新增任务配置、GUI、调度入口 | `references/task-checklist.md` 的配置章节、`references/wiki-guidance.md` 的配置章节 |
 | 修复识别、流程问题；新增测试、样本、回放或覆盖率 | `references/offline-testing.md`、`references/development-lessons.md`，按统一入口验证 |
 | 测试依赖、云端工作流、失败报告或迁移验收 | `references/offline-testing.md` 的入口、报告及云端章节，核对当前工作树实际实现 |
@@ -37,7 +38,7 @@ Version: 0.2 (2026-09-27)
 ## Execution Defaults
 
 1. 确认当前目录和 git worktree。代码只改当前 worktree，不向原始文件夹写业务代码。
-2. 先读当前实现、相关 assets 调用和 git 差异，再定义输入页面、输出页面、成功状态、异常状态和服务器范围。
+2. 先读当前实现、相关 assets 调用和 git 差异，再定义输入页面、输出页面、成功状态、异常状态和服务器范围。涉及列表选择、资源、集合属性或结果采样时，读取 `references/recognition-and-decision.md`（识别与决策经验），分清完整输入、用户偏好、硬资源限制、已允许的回退和动作完成证据。
 3. 新功能在当前 worktree（工作树）的 `tasks/<task>/` 下建立同名实现文件；正式离线用例和精选脱敏样本放当前工作树 `tests/` 并纳入版本控制。旧 `test/` 只保留历史副本及手动调试，继续忽略，不向其他工作树写正式测试；切图工具的手动采样按其现有路径保存。
 4. 实现交互时使用截图优先的单层状态循环；顺序固定为退出状态、点击/动作状态、通用处理器。
 5. 新增或调整源图先读 `references/asset-crop-tool.md`，已有截图默认使用无界面切图预检，再按模块生成包装。缺少可靠截图才停止并提醒用户补充；不隐藏缺失资产，不手改包装文件，不运行会删除旧文件的全量生成。
@@ -62,6 +63,15 @@ Version: 0.2 (2026-09-27)
 
 ## Known Gotchas
 
+- 卡片边缘裁切不等于字段裁切；在限制截图边界之前分别检查必要字段是否完整。
+  -> `references/recognition-and-decision.md#完整字段与滚动边界`（字段完整性）
+- 合法数字也可能来自错误资源；零值不是缺失，局部集合不能代表整体，旧读数需要核对上下文与有效期。
+  -> `references/recognition-and-decision.md#资源含义与零值`（资源语义）、`references/recognition-and-decision.md#完整集合与比例读数`（集合完整性）、`references/recognition-and-decision.md#上下文缓存与待确认动作`（读数期限与待确认动作）
+- 先区分偏好名单与必须满足的选择范围；用户允许回退时，要处理目标不可负担及到搜索终点仍无目标的情况。
+  -> `references/recognition-and-decision.md#偏好选择与资源内回退`（选择与回退）
+- 能支付第一步不代表后续预算足够；必领奖项、不同结果页和完整新阶段选项也要单独确认。
+  -> `references/recognition-and-decision.md#多阶段预算与实际扣费`（阶段预算）、`references/recognition-and-decision.md#领奖与结果采样`（领奖与采样）
+
 - 切图工具的实机入口即使预检也会连接设备；采样目录不是正式测试集，生成包装默认按模块过滤。
   -> `references/asset-crop-tool.md`
 
@@ -69,6 +79,8 @@ Version: 0.2 (2026-09-27)
   -> `references/offline-testing.md#3-新增或修复一个问题`
 - 模拟点击不代表画面变化或付款成功；重复帧、余额延迟和禁止动作都要明确断言。
   -> `references/offline-testing.md#4-样本和回放`
+- 主循环回放不能绕过生产动作间隔；先复用可推进时钟，再明确安排重复帧和正面终态。
+  -> `references/recognition-and-decision.md#回放与证据范围`（真实计时与输入证据）
 - 本机通过或写好工作流不等于云端已验证；覆盖率只声明实际统计范围。
   -> `references/offline-testing.md#7-覆盖率环境与云端`
 
@@ -76,9 +88,9 @@ Version: 0.2 (2026-09-27)
   -> `references/autoepicseven-rules.md#ocr-语言`
 - 固定位置只判亮灰优先 `match_color()`；先定位再判色使用 `match_template_color()`。
   -> `references/autoepicseven-rules.md#颜色与模板匹配`
-- 稀有中间状态不能用于业务计数。免费召唤应由“继续免费召唤/返回/已用完”等游戏状态推进。
-  -> `references/development-lessons.md#召唤与活动流程`
-- E7 的计数器当前值可以合法超过恢复上限，不要套用 `value <= total`。
+- 稀有动画不能独自承担业务计数；用可继续、可返回和已耗尽等已验证状态推进，确认进入下一轮后才重置结果记录。
+  -> `references/development-lessons.md#重复操作与结果确认`
+- 恢复上限不等于硬容量；先核对计数器含义，不统一套用 `value <= total`（当前值不得超过上限）。
   -> `references/development-lessons.md#ocr-与资源采集`
 - 跨模块页面跳转优先 `ui_goto(Page)`，不要复用依赖隐含页面上下文的私有入口方法。
   -> `references/development-lessons.md#页面与跨模块跳转`
@@ -98,6 +110,7 @@ Version: 0.2 (2026-09-27)
 ## Completion Checklist
 
 - [ ] 当前 worktree、服务器范围、页面进出和成功条件已确认
+- [ ] 涉及识别或选择时，已核对字段完整性、资源含义、完整集合、上下文与缓存期限，以及用户允许的回退和后续预算
 - [ ] 没有删除文件，没有手改生成文件，没有隐藏缺失 assets
 - [ ] 涉及切图时，已核对预检路径、冲突与样本隐私，定向生成包装，并用真实截图验证正反例
 - [ ] 状态循环没有固定 sleep、负面退出或带副作用退出
