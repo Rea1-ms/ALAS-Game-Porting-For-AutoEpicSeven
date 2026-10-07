@@ -2,13 +2,13 @@
 
 面向 AutoEpicSeven（自动化项目）的 Codex skill（技能），用于开发、移植、审核和调试 ALAS（二代游戏自动化框架）风格的 E7 自动化功能。
 
-当前版本：v0.4（0.4 版本）
+当前版本：v0.6（0.6 版本）
 
 ## 适用范围
 
 - task（任务）实现与状态循环
 - Page（页面对象）注册、路由和服务器分流
-- assets（识别资源）与 button extract（按钮资源生成）流程
+- assets（识别资源）、切图、暂存与 button extract（按钮资源生成）流程
 - OCR（光学字符识别）语言、后处理和资源栏识别
 - scheduler（调度器）、配置和 GUI（图形界面）接入
 - 离线回归、截图与流程回放、覆盖率、云端测试，以及实机日志分析
@@ -35,6 +35,7 @@ alas-game-porting-for-autoepicseven/
     ├── autoepicseven-rules.md
     ├── asset-task-conventions.md
     ├── asset-crop-tool.md
+    ├── asset-archive-tool.md
     ├── development-lessons.md
     ├── recognition-and-decision.md
     ├── offline-testing.md
@@ -47,12 +48,13 @@ alas-game-porting-for-autoepicseven/
 - `SKILL.md`：触发说明、任务路由、执行默认值和验收清单。
 - `agents/openai.yaml`：Codex 展示名称、简介和默认调用提示。
 - `references/autoepicseven-rules.md`：AutoEpicSeven（自动化项目）的强制开发约束。
-- `references/asset-task-conventions.md`：asset name（资源名）、目录映射、task（任务）组织和入口定位规范。
+- `references/asset-task-conventions.md`：asset name（资源名）、分文件夹规则、目录映射、task（任务）组织和入口定位规范。
 - `references/asset-crop-tool.md`：切图工具的入口、参数、交互、配方、输出目录和正式回归接入。
+- `references/asset-archive-tool.md`：重复与闲置素材的依赖检查、预览、移动、内容校验和定向生成。
 - `references/state-loop-bible.md`：ALAS（自动化框架）状态循环完整规范。
 - `references/task-checklist.md`：新增或重写任务时的检查清单。
 - `references/development-lessons.md`：跨任务的重复操作、页面导航、列表配对、资源采集和排错规则。
-- `references/recognition-and-decision.md`（识别与决策经验）：字段完整性、资源含义、偏好回退、集合读数、缓存期限、多阶段预算、领奖采样和证据范围。具体事件、费用与历史验证记录留在项目文档。
+- `references/recognition-and-decision.md`：字段完整性、资源含义、偏好回退、集合读数、缓存期限、多阶段预算、领奖采样和证据范围。具体事件、费用与历史验证记录留在项目文档。
 - `references/wiki-guidance.md`：识别、页面、异常、配置等框架原则。
 - `references/offline-testing.md`：正式测试分类、样本、回放、统一入口、报告、覆盖率和云端验收步骤。
 - `references/skill-evals.md`：触发边界和行为验收样例。
@@ -109,7 +111,7 @@ git submodule update --init --recursive
 - 正式测试与精选脱敏截图在当前 worktree（工作树）的 `tests/` 入库；历史 `test/`、临时产物和真实配置继续忽略。
 - 修改识别和流程时默认读取测试规范，登记用例与样本，使用统一离线入口验证；缺图、缺模型和跳过都不算通过。
 - 本机和云端使用相同入口；系统、解释器及依赖以当前工作流和锁定记录为准，有真实运行记录才算完成云端验收。
-- 禁止删除文件，不手改生成配置和生成 assets wrapper（识别资源包装文件）。
+- 重复或闲置素材可通过暂存工具移动并校验；其他文件只修改或新增，不手改生成配置和生成 assets wrapper（识别资源包装文件）。
 - 游戏交互使用截图驱动的状态循环，不使用固定 sleep（等待）推进流程。
 - assets（识别资源）语言与 OCR（光学字符识别）模型语言分开处理。
 - 配置生成器运行前需要用户批准。

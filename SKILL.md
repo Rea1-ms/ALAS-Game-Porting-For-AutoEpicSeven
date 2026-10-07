@@ -6,7 +6,7 @@ description: >
 
 # AutoEpicSeven ALAS Game Porting
 
-Version: 0.4 (2026-10-04)
+Version: 0.6 (2026-10-07)
 
 把 AutoEpicSeven 当作已经成熟的 E7 自动化项目直接开发。先读当前仓库代码、git 差异和本 skill 的参考资料。
 
@@ -23,8 +23,9 @@ Version: 0.4 (2026-10-04)
 | 新增或重写任务、交互流程 | `references/asset-task-conventions.md`、`references/task-checklist.md`、`references/state-loop-bible.md`、`references/development-lessons.md` |
 | 审核状态循环、死循环、点击时序 | `references/state-loop-bible.md`、`references/development-lessons.md`；涉及选择或领奖时读取 `references/recognition-and-decision.md`（识别与决策经验） |
 | 新增页面、修改路由、按服务器注册页面 | `references/wiki-guidance.md` 的 Page/UI 与多服务器章节、`references/autoepicseven-rules.md` 的页面与分服章节、`references/development-lessons.md` 的页面与跨模块跳转章节 |
-| 新增或调整 assets、命名、目录或颜色/模板识别 | `references/asset-task-conventions.md`、`references/wiki-guidance.md` 的识别章节、`references/development-lessons.md` 的识别经验 |
-| 从截图切图、修改区域、多帧或配方重放 | `references/asset-crop-tool.md`（工具入口与用法）、`references/asset-task-conventions.md`；先预检再保存，定向生成包装 |
+| 新增或调整 assets、命名、目录或颜色/模板识别 | `references/asset-task-conventions.md`（目录调整先读“分文件夹规则”）、`references/wiki-guidance.md` 的识别章节、`references/development-lessons.md` 的识别经验 |
+| 清理重复或闲置 assets（识别资源） | `references/asset-archive-tool.md`（素材暂存工具）、`references/asset-task-conventions.md`；确认消费方和属性依赖后预览、移动、校验，定向生成包装 |
+| 从截图切图、修改区域、多帧或配方重放 | `references/asset-crop-tool.md`（工具入口与用法）、`references/asset-task-conventions.md` 的分文件夹规则；先确定功能子目录，再预检、保存和定向生成包装 |
 | 定位任务入口、实现文件或 asset 来源 | `references/asset-task-conventions.md` 的入口检索与反向定位章节 |
 | OCR、资源栏、语言问题 | `references/autoepicseven-rules.md` 的 OCR 章节、`references/development-lessons.md` 的 OCR 经验；字段完整性与资源含义见 `references/recognition-and-decision.md`（识别与决策经验） |
 | 滚动漏读、偏好回退、分阶段预算、集合属性决策、领奖或结果采样 | `references/recognition-and-decision.md`（识别与决策经验）、`references/offline-testing.md`（离线测试与验收） |
@@ -41,11 +42,12 @@ Version: 0.4 (2026-10-04)
 2. 先读当前实现、相关 assets 调用和 git 差异，再定义输入页面、输出页面、成功状态、异常状态和服务器范围。涉及列表选择、资源、集合属性或结果采样时，读取 `references/recognition-and-decision.md`（识别与决策经验），分清完整输入、用户偏好、硬资源限制、已允许的回退和动作完成证据。
 3. 新功能在当前 worktree（工作树）的 `tasks/<task>/` 下建立同名实现文件；正式离线用例和精选脱敏样本放当前工作树 `tests/` 并纳入版本控制。旧 `test/` 只保留历史副本及手动调试，继续忽略，不向其他工作树写正式测试；切图工具的手动采样按其现有路径保存。
 4. 实现交互时使用截图优先的单层状态循环；顺序固定为退出状态、点击/动作状态、通用处理器。
-5. 新增或调整源图先读 `references/asset-crop-tool.md`，已有截图默认使用无界面切图预检，再按模块生成包装。缺少可靠截图才停止并提醒用户补充；不隐藏缺失资产，不手改包装文件，不运行会删除旧文件的全量生成。
-6. 配置只改 YAML 源文件和 `config_manual.py`。运行 config updater 前必须请求用户批准。
-7. 修改识别、规则或流程时复用或补充有意义的回归用例；更新分类、样本引用和必要的运行器白名单，先列出确认，再用统一入口运行。自动入口只用模拟设备，不读取真实账号配置。实机调试独立手动执行，遵守本次授权。
-8. 修改后运行定向静态检查和差异格式检查。不能运行的验证要明确说明。
-9. 拟写或执行提交时读取 `references/autoepicseven-rules.md#提交信息`，按最终差异使用大写类型前缀和英文动词短语；验证只写实际结果，遵守已有提交与推送分工。
+5. 新增或调整源图先按 `references/asset-task-conventions.md` 的分文件夹规则确定完整模块路径，再读 `references/asset-crop-tool.md`，已有截图默认使用无界面切图预检，直接保存到目标子目录并按模块生成包装。缺少可靠截图才停止并提醒用户补充；不隐藏缺失资产，不手改包装文件，不运行会删除旧文件的全量生成。
+6. 清理重复或闲置素材时读取 `references/asset-archive-tool.md`，允许调用当前工作树的暂存工具将源图移出素材目录；完成内容校验、定向生成和相关回归。
+7. 配置只改 YAML 源文件和 `config_manual.py`。运行 config updater 前必须请求用户批准。
+8. 修改识别、规则或流程时复用或补充有意义的回归用例；更新分类、样本引用和必要的运行器白名单，先列出确认，再用统一入口运行。自动入口只用模拟设备，不读取真实账号配置。实机调试独立手动执行，遵守本次授权。
+9. 修改后运行定向静态检查和差异格式检查。不能运行的验证要明确说明。
+10. 拟写或执行提交时读取 `references/autoepicseven-rules.md#提交信息`，按最终差异使用大写类型前缀和英文动词短语；验证只写实际结果，遵守已有提交与推送分工。
 
 ## State Loop Baseline
 
@@ -111,8 +113,8 @@ Version: 0.4 (2026-10-04)
 
 - [ ] 当前 worktree、服务器范围、页面进出和成功条件已确认
 - [ ] 涉及识别或选择时，已核对字段完整性、资源含义、完整集合、上下文与缓存期限，以及用户允许的回退和后续预算
-- [ ] 没有删除文件，没有手改生成文件，没有隐藏缺失 assets
-- [ ] 涉及切图时，已核对预检路径、冲突与样本隐私，定向生成包装，并用真实截图验证正反例
+- [ ] 素材清理已通过暂存工具移动并校验，其他文件未删除；没有手改生成文件或隐藏缺失 assets（识别资源）
+- [ ] 涉及切图时，已确认功能目录与同名图组归属，核对预检路径、冲突与样本隐私，定向生成包装，并用真实截图验证正反例
 - [ ] 状态循环没有固定 sleep、负面退出或带副作用退出
 - [ ] OCR 显式使用规范化语言，assets 仍由 server.lang 选择
 - [ ] 页面节点、路由、返回关系和入场后弹窗状态已覆盖
