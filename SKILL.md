@@ -1,7 +1,7 @@
 ---
 name: alas-game-porting-for-autoepicseven
 description: >
-  Load for AutoEpicSeven/E7 automation development, porting, debugging, review, or tests: ALAS state loops, pages/routes, assets/cropping, OCR, server/language dispatch, config/scheduling, offline regression, screenshot replay, coverage, GitHub Actions, and commit messages. Also load for explicit $alas-game-porting-for-autoepicseven requests. Do not use for Epic Seven gameplay advice, unrelated Python/testing projects, or standalone Alasio/frontend migration.
+  Load when the user asks to develop, port, debug, review, or test AutoEpicSeven/E7 automation: ALAS state loops, pages/routes, assets/cropping, OCR, server/language dispatch, config visibility, scheduling, offline replay, coverage, CI, or commit messages. Also load for explicit $alas-game-porting-for-autoepicseven requests. Do not use for Epic Seven gameplay advice, unrelated Python/testing projects, or standalone Alasio/frontend migration.
 ---
 
 # AutoEpicSeven ALAS Game Porting
@@ -29,11 +29,11 @@ Version: 0.6 (2026-10-07)
 | 定位任务入口、实现文件或 asset 来源 | `references/asset-task-conventions.md` 的入口检索与反向定位章节 |
 | OCR、资源栏、语言问题 | `references/autoepicseven-rules.md` 的 OCR 章节、`references/development-lessons.md` 的 OCR 经验；字段完整性与资源含义见 `references/recognition-and-decision.md`（识别与决策经验） |
 | 滚动漏读、偏好回退、分阶段预算、集合属性决策、领奖或结果采样 | `references/recognition-and-decision.md`（识别与决策经验）、`references/offline-testing.md`（离线测试与验收） |
-| 新增任务配置、GUI、调度入口 | `references/task-checklist.md` 的配置章节、`references/wiki-guidance.md` 的配置章节 |
+| 新增任务配置、调整选项显示或隐藏、GUI（图形界面）、调度入口 | `references/task-checklist.md` 的配置章节、`references/wiki-guidance.md#配置项显示与隐藏`（先区分固定隐藏、字段联动与整项任务入口） |
 | 修复识别、流程问题；新增测试、样本、回放或覆盖率 | `references/offline-testing.md`、`references/development-lessons.md`，按统一入口验证 |
 | 测试依赖、云端工作流、失败报告或迁移验收 | `references/offline-testing.md` 的入口、报告及云端章节，核对当前工作树实际实现 |
 | 拟写提交说明或准备提交 | `references/autoepicseven-rules.md#提交信息`，先核对实际差异与已有提交风格 |
-| 维护或验收本 skill | `references/skill-evals.md` |
+| 维护或验收本 skill（技能） | `references/skill-evals.md`；先固定题目与判据，再改规则，分开记录静态检查与模型验收 |
 | 其他 AutoEpicSeven 开发 | 扫描所有参考文件标题，只读取与当前任务直接相关的章节 |
 
 ## Execution Defaults
@@ -44,7 +44,7 @@ Version: 0.6 (2026-10-07)
 4. 实现交互时使用截图优先的单层状态循环；顺序固定为退出状态、点击/动作状态、通用处理器。
 5. 新增或调整源图先按 `references/asset-task-conventions.md` 的分文件夹规则确定完整模块路径，再读 `references/asset-crop-tool.md`，已有截图默认使用无界面切图预检，直接保存到目标子目录并按模块生成包装。缺少可靠截图才停止并提醒用户补充；不隐藏缺失资产，不手改包装文件，不运行会删除旧文件的全量生成。
 6. 清理重复或闲置素材时读取 `references/asset-archive-tool.md`，允许调用当前工作树的暂存工具将源图移出素材目录；完成内容校验、定向生成和相关回归。
-7. 配置只改 YAML 源文件和 `config_manual.py`。运行 config updater 前必须请求用户批准。
+7. 配置定义只改 YAML（配置源文件）和 `config_manual.py`（手动配置）。选项显示或隐藏的依赖优先复用统一隐藏规则，见 `references/wiki-guidance.md#配置项显示与隐藏`。运行 config updater（配置生成器）前必须请求用户批准。
 8. 修改识别、规则或流程时复用或补充有意义的回归用例；更新分类、样本引用和必要的运行器白名单，先列出确认，再用统一入口运行。自动入口只用模拟设备，不读取真实账号配置。实机调试独立手动执行，遵守本次授权。
 9. 修改后运行定向静态检查和差异格式检查。不能运行的验证要明确说明。
 10. 拟写或执行提交时读取 `references/autoepicseven-rules.md#提交信息`，按最终差异使用大写类型前缀和英文动词短语；验证只写实际结果，遵守已有提交与推送分工。

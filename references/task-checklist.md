@@ -111,6 +111,7 @@ def _execute_feature(self, skip_first_screenshot=True):
 - [ ] 已确认 TaskName 经 `inflection.underscore()` 后与 `aes.py` 方法名一致
 - [ ] 配置属性使用 `Group_Argument` 扁平名称
 - [ ] 所有支持语言翻译完整，没有占位路径
+- [ ] 已按配置显隐流程区分固定隐藏、字段联动和任务入口，核对现有机制与对应验证（详见主文件直达的配置显隐章节）
 - [ ] 运行 config updater 前已请求用户批准
 
 调度顺序默认遵循：重启、短时收取、每日奖励、日常战斗、常规战斗、纯消磨时间。活动收益很高不等于可以绕过页面、服务器和资源安全检查；优先级变化要结合活动有效期和失败影响决定。
