@@ -1,12 +1,12 @@
 ---
 name: alas-game-porting-for-autoepicseven
 description: >
-  Load when the user asks to develop, port, debug, review, or test AutoEpicSeven/E7 automation: ALAS state loops, pages/routes, assets/cropping, OCR, server/language dispatch, config visibility, scheduling, offline replay, coverage, CI, or commit messages. Also load for explicit $alas-game-porting-for-autoepicseven requests. Do not use for Epic Seven gameplay advice, unrelated Python/testing projects, or standalone Alasio/frontend migration.
+  Load when the user asks to develop, port, debug, review, or test AutoEpicSeven/E7 automation: ALAS state loops, pages/routes, assets/cropping, OCR, server/language dispatch, config visibility, scheduling, event calendars/archival, offline replay, coverage, CI, or commit messages. Also load for explicit $alas-game-porting-for-autoepicseven requests. Do not use for Epic Seven gameplay advice, unrelated Python/testing projects, or standalone Alasio/frontend migration.
 ---
 
 # AutoEpicSeven ALAS Game Porting
 
-Version: 0.6 (2026-10-07)
+Version: 0.8 (2026-10-30)
 
 把 AutoEpicSeven 当作已经成熟的 E7 自动化项目直接开发。先读当前仓库代码、git 差异和本 skill 的参考资料。
 
@@ -29,6 +29,7 @@ Version: 0.6 (2026-10-07)
 | 定位任务入口、实现文件或 asset 来源 | `references/asset-task-conventions.md` 的入口检索与反向定位章节 |
 | OCR、资源栏、语言问题 | `references/autoepicseven-rules.md` 的 OCR 章节、`references/development-lessons.md` 的 OCR 经验；字段完整性与资源含义见 `references/recognition-and-decision.md`（识别与决策经验） |
 | 滚动漏读、偏好回退、分阶段预算、集合属性决策、领奖或结果采样 | `references/recognition-and-decision.md`（识别与决策经验）、`references/offline-testing.md`（离线测试与验收） |
+| 活动更新、活动与赛季时间表、分服对齐或过期玩法归档 | `references/activity-maintenance.md`（活动维护）；涉及配置显隐时同时读 `references/wiki-guidance.md#配置项显示与隐藏`，实现与验证仍按离线规范 |
 | 新增任务配置、调整选项显示或隐藏、GUI（图形界面）、调度入口 | `references/task-checklist.md` 的配置章节、`references/wiki-guidance.md#配置项显示与隐藏`（先区分固定隐藏、字段联动与整项任务入口） |
 | 修复识别、流程问题；新增测试、样本、回放或覆盖率 | `references/offline-testing.md`、`references/development-lessons.md`，按统一入口验证 |
 | 测试依赖、云端工作流、失败报告或迁移验收 | `references/offline-testing.md` 的入口、报告及云端章节，核对当前工作树实际实现 |
@@ -73,6 +74,9 @@ Version: 0.6 (2026-10-07)
   -> `references/recognition-and-decision.md#偏好选择与资源内回退`（选择与回退）
 - 能支付第一步不代表后续预算足够；必领奖项、不同结果页和完整新阶段选项也要单独确认。
   -> `references/recognition-and-decision.md#多阶段预算与实际扣费`（阶段预算）、`references/recognition-and-decision.md#领奖与结果采样`（领奖与采样）
+
+- 活动有日期不等于对应服务器已有自动流程；时间表、界面选项和执行支持范围一起核对，结束也按服务器分别判断。
+  -> `references/activity-maintenance.md`（活动维护）
 
 - 切图工具的实机入口即使预检也会连接设备；采样目录不是正式测试集，生成包装默认按模块过滤。
   -> `references/asset-crop-tool.md`
@@ -119,6 +123,7 @@ Version: 0.6 (2026-10-07)
 - [ ] OCR 显式使用规范化语言，assets 仍由 server.lang 选择
 - [ ] 页面节点、路由、返回关系和入场后弹窗状态已覆盖
 - [ ] 配置源、调度顺序、aes.py 入口和 i18n 按任务需要完成
+- [ ] 涉及活动更新时，已核对共享日期、分服支持、时间图、选项显隐与完成后停止复查；归档不清空历史记录
 - [ ] 对应正式用例在当前工作树 `tests/`，分类、样本和运行器登记一致，统一入口可列出并执行
 - [ ] 所选用例全部通过且零跳过；失败可定位到预期、实际及相关样本，未验证项有明确记录
 - [ ] 临时产物与账号配置保持忽略；覆盖率和云端结果没有超出实际证据
