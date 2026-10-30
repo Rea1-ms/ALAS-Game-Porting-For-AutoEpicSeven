@@ -21,13 +21,15 @@ Version: 0.8 (2026-10-30)
 | 当前工作 | 还要读取 |
 | --- | --- |
 | 新增或重写任务、交互流程 | `references/asset-task-conventions.md`、`references/task-checklist.md`、`references/state-loop-bible.md`、`references/development-lessons.md` |
-| 审核状态循环、死循环、点击时序 | `references/state-loop-bible.md`、`references/development-lessons.md`；涉及选择或领奖时读取 `references/recognition-and-decision.md`（识别与决策经验） |
+| 审核状态循环、死循环、点击时序、点击未生效或恢复反复卡住 | `references/state-loop-bible.md`、`references/development-lessons.md#点击间隔与未生效请求`、`references/development-lessons.md#重复分支与恢复往返`；涉及选择或领奖时读取 `references/recognition-and-decision.md`（识别与决策经验） |
 | 新增页面、修改路由、按服务器注册页面 | `references/wiki-guidance.md` 的 Page/UI 与多服务器章节、`references/autoepicseven-rules.md` 的页面与分服章节、`references/development-lessons.md` 的页面与跨模块跳转章节 |
 | 新增或调整 assets、命名、目录或颜色/模板识别 | `references/asset-task-conventions.md`（目录调整先读“分文件夹规则”）、`references/wiki-guidance.md` 的识别章节、`references/development-lessons.md` 的识别经验 |
 | 清理重复或闲置 assets（识别资源） | `references/asset-archive-tool.md`（素材暂存工具）、`references/asset-task-conventions.md`；确认消费方和属性依赖后预览、移动、校验，定向生成包装 |
 | 从截图切图、修改区域、多帧或配方重放 | `references/asset-crop-tool.md`（工具入口与用法）、`references/asset-task-conventions.md` 的分文件夹规则；先确定功能子目录，再预检、保存和定向生成包装 |
 | 定位任务入口、实现文件或 asset 来源 | `references/asset-task-conventions.md` 的入口检索与反向定位章节 |
-| OCR、资源栏、语言问题 | `references/autoepicseven-rules.md` 的 OCR 章节、`references/development-lessons.md` 的 OCR 经验；字段完整性与资源含义见 `references/recognition-and-decision.md`（识别与决策经验） |
+| OCR（文字识别）、重复识字、长名、资源栏或语言问题 | `references/autoepicseven-rules.md` 的 OCR 章节、`references/development-lessons.md` 的 OCR 经验、`references/recognition-and-decision.md#静态姓名与动态面板复用`、`references/recognition-and-decision.md#长名与相邻属性分开排查` |
+| 棋盘边框缺失、占格不全或下场后无法放回 | `references/recognition-and-decision.md#定位锚点与完整占格`、`references/development-lessons.md#重复分支与恢复往返`；按 `references/offline-testing.md` 验证完整往返 |
+| 战败回合不变、短暂结果漏拍 | `references/recognition-and-decision.md#战斗返回与生命变化`、`references/offline-testing.md`；先核对本次战斗及完整返回证据 |
 | 滚动漏读、偏好回退、分阶段预算、集合属性决策、领奖或结果采样 | `references/recognition-and-decision.md`（识别与决策经验）、`references/offline-testing.md`（离线测试与验收） |
 | 活动更新、活动与赛季时间表、分服对齐或过期玩法归档 | `references/activity-maintenance.md`（活动维护）；涉及配置显隐时同时读 `references/wiki-guidance.md#配置项显示与隐藏`，实现与验证仍按离线规范 |
 | 新增任务配置、调整选项显示或隐藏、GUI（图形界面）、调度入口 | `references/task-checklist.md` 的配置章节、`references/wiki-guidance.md#配置项显示与隐藏`（先区分固定隐藏、字段联动与整项任务入口） |
@@ -52,11 +54,12 @@ Version: 0.8 (2026-10-30)
 
 ## State Loop Baseline
 
-- 禁止用 `click + sleep` 推进游戏流程。
+- **所有游戏流程必须由当前截图中的正面状态驱动：每轮先判断退出，再处理可操作状态；条件满足就在本轮退出或执行对应动作。**
 - 循环首部必须获取新截图，并用 `skip_first_screenshot` 复用调用方已有截图。
 - 独立调用前准备首帧：离线测试使用公共辅助注入模拟帧；手动实机运行才执行设备截图。
 - 退出只使用正面、无副作用的状态判断；不要用负面条件、点击语句或 handler 作为退出判据。
-- 点击动作通常设置 2/3/5 秒 interval；纯退出识别不设置 interval。
+- **interval（点击间隔）只约束同一动作的重复点击。** 新状态中不同动作的首次点击条件满足就执行；纯退出和完成判断每帧检查。2/3/5 秒仅为同动作重试间隔示例，取值按具体流程验证。
+- 等待必须对应尚未成立的必要页面、字段或几何证据；判据明确具体对象与变化，证据成立即推进。业务计时器只承担同动作限频或异常等待上限，框架截图采样节奏单独保留。
 - `handle_*` 只返回 bool；仅当确实执行了会改变画面的操作时返回 True。
 - 可预期的短子状态使用局部 Timer 或重试上限；长动画和战斗主循环不强加短超时。
 - 默认保持一个顶层状态循环。确需嵌套时，子循环必须退出到父循环能够识别的状态，并写清原因。
@@ -66,6 +69,12 @@ Version: 0.8 (2026-10-30)
 
 ## Known Gotchas
 
+- 普通和恢复入口统一遵守“状态确认即处理”：各动作独立限制自身重试，其余状态和退出判断持续参与当前帧判定；点击请求与目标确认分别记录。
+  -> `references/development-lessons.md#点击间隔与未生效请求`、`references/development-lessons.md#重复分支与恢复往返`
+- 姓名、动态面板和待确认动作分别保存；局部字形可复用不等于旧刻印、旧坐标或旧余额可以授权操作。
+  -> `references/recognition-and-decision.md#静态姓名与动态面板复用`
+- 固定边框缺失时核对当前完整控件，不把满员当定位前提；下场成功还要验证识名、放回与原阵容恢复。
+  -> `references/recognition-and-decision.md#定位锚点与完整占格`、`references/offline-testing.md#4-样本和回放`
 - 卡片边缘裁切不等于字段裁切；在限制截图边界之前分别检查必要字段是否完整。
   -> `references/recognition-and-decision.md#完整字段与滚动边界`（字段完整性）
 - 合法数字也可能来自错误资源；零值不是缺失，局部集合不能代表整体，旧读数需要核对上下文与有效期。
@@ -119,7 +128,8 @@ Version: 0.8 (2026-10-30)
 - [ ] 涉及识别或选择时，已核对字段完整性、资源含义、完整集合、上下文与缓存期限，以及用户允许的回退和后续预算
 - [ ] 素材清理已通过暂存工具移动并校验，其他文件未删除；没有手改生成文件或隐藏缺失 assets（识别资源）
 - [ ] 涉及切图时，已确认功能目录与同名图组归属，核对预检路径、冲突与样本隐私，定向生成包装，并用真实截图验证正反例
-- [ ] 状态循环没有固定 sleep、负面退出或带副作用退出
+- [ ] 状态循环以当前帧的正面证据驱动；退出判断无副作用，已确认可操作的状态在本轮立即处理
+- [ ] 各动作独立限频；上一动作间隔尚未结束时，下一动作与正面退出仍按当前帧立即处理；目标确认结束旧重试，恢复路径及读数变化边界已有对应回放
 - [ ] OCR 显式使用规范化语言，assets 仍由 server.lang 选择
 - [ ] 页面节点、路由、返回关系和入场后弹窗状态已覆盖
 - [ ] 配置源、调度顺序、aes.py 入口和 i18n 按任务需要完成
