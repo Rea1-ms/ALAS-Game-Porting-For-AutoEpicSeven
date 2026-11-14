@@ -1,6 +1,6 @@
 # 素材暂存工具
 
-清理重复或闲置源图时，使用当前工作树的 `dev_tools.asset_archive`（素材暂存工具），允许将图片移出 `assets/`（运行素材目录），工具将保留原图内容和清单。
+清理重复或闲置源图时，使用当前工作树的 `dev_tools.assets.asset_archive`（素材暂存工具），允许将图片移出 `assets/`（运行素材目录），工具将保留原图内容和清单。
 
 ## 使用前核对
 
@@ -14,8 +14,8 @@
 `move`（预览暂存）接收仓库相对图片路径或通配符，默认只输出清单，不创建目录或移动文件。明确核对选中项后，添加 `--write`（执行移动）。以下占位路径需换成本次已确认的实际源图：
 
 ```powershell
-.\.venv\Scripts\python.exe -B -m dev_tools.asset_archive move 'assets/<语言>/<模块>/<素材>.png'
-.\.venv\Scripts\python.exe -B -m dev_tools.asset_archive move 'assets/<语言>/<模块>/<素材>.png' --write
+.\.venv\Scripts\python.exe -B -m dev_tools.assets.asset_archive move 'assets/<语言>/<模块>/<素材>.png'
+.\.venv\Scripts\python.exe -B -m dev_tools.assets.asset_archive move 'assets/<语言>/<模块>/<素材>.png' --write
 ```
 
 新批次保留语言和模块目录，图片保存到 `.cache/unused-assets/<语言>/<模块>/`（闲置素材暂存目录）。清单记录原路径、暂存路径、字节数、`sha256`（内容校验值）和逐项移动状态；实际清单位置以写入结果的 `manifest`（清单路径）字段为准。
@@ -27,6 +27,6 @@
 ## 移动后的验证
 
 - 确认暂存目录与清单继续被忽略，不提交原图暂存副本、报告或账号信息。
-- 仅按受影响的完整模块路径运行 `dev_tools.button_extract`（按钮资源生成器），检查包装和导入差异；不手改包装，不运行全量清理。
+- 仅按受影响的完整模块路径运行 `dev_tools.assets.button_extract`（按钮资源生成器），检查包装和导入差异；不手改包装，不运行全量清理。
 - 按 `offline-testing.md`（离线测试与验收）运行相关测试集。替代搜索区域或点击范围时，保留真实截图的正反例及位置对应，不把内容相同误当作识别行为相同。
 - 记录移动数量、实际体积变化、校验和回归结果。暂存会减少当前源素材体积，不会回收版本历史；暂存原图继续保留，测试缓存按用户约定提醒自行清理。

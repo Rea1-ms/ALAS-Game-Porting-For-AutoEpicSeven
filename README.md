@@ -21,7 +21,7 @@
 
 AutoEpicSeven（自动化项目）通过 git submodule（Git 子模块）引用指定版本。
 
-skill（技能）包含状态循环规范、项目约束、wiki（规则整理）、开发经验和离线测试规则。运行时仍需读取当前项目的验收计划、测试入口及清单，以实际代码和执行结果为准。
+skill（技能）包含状态循环规范、项目约束、wiki（规则整理）、开发经验和离线测试规则。运行时仍需读取当前项目的 `TESTING_PLAN.md`（总计划）、`testing_records/`（日期记录）、测试入口及清单，以实际代码和执行结果为准。
 
 ## 目录结构
 
@@ -33,6 +33,7 @@ alas-game-porting-for-autoepicseven/
 │   └── openai.yaml
 └── references/
     ├── autoepicseven-rules.md
+    ├── dev-tools.md
     ├── asset-task-conventions.md
     ├── asset-crop-tool.md
     ├── asset-archive-tool.md
@@ -48,6 +49,7 @@ alas-game-porting-for-autoepicseven/
 - `SKILL.md`：触发说明、任务路由、执行默认值和验收清单。
 - `agents/openai.yaml`：Codex 展示名称、简介和默认调用提示。
 - `references/autoepicseven-rules.md`：AutoEpicSeven（自动化项目）的强制开发约束。
+- `references/dev-tools.md`：开发工具分类、一次性脚本归属、入口迁移和验证规则。
 - `references/asset-task-conventions.md`：asset name（资源名）、分文件夹规则、目录映射、task（任务）组织和入口定位规范。
 - `references/asset-crop-tool.md`：切图工具的入口、参数、交互、配方、输出目录和正式回归接入。
 - `references/asset-archive-tool.md`：重复与闲置素材的依赖检查、预览、移动、内容校验和定向生成。
@@ -111,7 +113,7 @@ git submodule update --init --recursive
 - 正式测试与精选脱敏截图在当前 worktree（工作树）的 `tests/` 入库；历史 `test/`、临时产物和真实配置继续忽略。
 - 修改识别和流程时默认读取测试规范，登记用例与样本，使用统一离线入口验证；缺图、缺模型和跳过都不算通过。
 - 本机和云端使用相同入口；系统、解释器及依赖以当前工作流和锁定记录为准，有真实运行记录才算完成云端验收。
-- 重复或闲置素材可通过暂存工具移动并校验；其他文件只修改或新增，不手改生成配置和生成 assets wrapper（识别资源包装文件）。
+- 重复或闲置素材可通过暂存工具移动并校验；已授权的目录整理按开发工具规则移动原文件，其他文件只修改或新增，不删除文件，不手改生成配置和生成 assets wrapper（识别资源包装文件）。
 - 游戏交互使用截图驱动的状态循环，不使用固定 sleep（等待）推进流程。
 - assets（识别资源）语言与 OCR（光学字符识别）模型语言分开处理。
 - 配置生成器运行前需要用户批准。

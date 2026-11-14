@@ -1,10 +1,10 @@
 # 切图工具与用法
 
-新增或调整识别源图时，默认使用当前工作树的 `dev_tools.asset_crop`（切图工具）；`dev_tools.asset_crop_ui.py`（交互界面）是内部实现，不单独启动。命名、目录及属性语义仍以资源规范为准，本文件只说明工具操作和当前限制。
+新增或调整识别源图时，默认使用当前工作树的 `dev_tools.assets.asset_crop`（切图工具）；`dev_tools.assets.asset_crop_ui.py`（交互界面）是内部实现，不单独启动。命名、目录及属性语义仍以资源规范为准，本文件只说明工具操作和当前限制。
 
 ## 1. 选择入口
 
-先切换到当前工作树根目录，使用已有 `.venv/Scripts/python.exe`（虚拟环境解释器）。先查 `python -B -m dev_tools.asset_crop --help`（查看帮助）；以下命令中的解释器应替换为实际环境路径。不要从主检出目录借工具，也不为切图任务自行安装依赖。
+先切换到当前工作树根目录，使用已有 `.venv/Scripts/python.exe`（虚拟环境解释器）。先查 `python -B -m dev_tools.assets.asset_crop --help`（查看帮助）；以下命令中的解释器应替换为实际环境路径。不要从主检出目录借工具，也不为切图任务自行安装依赖。
 
 | 子命令 | 用途 | 是否连接设备 |
 | --- | --- | --- |
@@ -26,7 +26,7 @@
 最小预览命令模板如下。先将尖括号内容替换为当前已核对的图片、完整模块路径和实际矩形，不依赖固定截图编号；示例资源名只用于预检，不能去掉预检参数直接用于业务：
 
 ```powershell
-.venv/Scripts/python.exe -B -m dev_tools.asset_crop make --image "<已核对截图路径>" --namespace global_cn --module "<完整模块路径>" --name SKILL_CROP_PREVIEW --box "<左,上,右,下>" --suite skill_crop_preview --case help_example --dry-run --json
+.venv/Scripts/python.exe -B -m dev_tools.assets.asset_crop make --image "<已核对截图路径>" --namespace global_cn --module "<完整模块路径>" --name SKILL_CROP_PREVIEW --box "<左,上,右,下>" --suite skill_crop_preview --case help_example --dry-run --json
 ```
 
 参数含义：`--image`（已有图片）、`--namespace`（素材语言空间）、`--module`（完整资源模块）、`--name`（资源名）、`--suite`（手动采样目录名）、`--case`（手动采样文件名）、`--json`（输出结构化结果）。采样目录名和文件名接受小写字母、数字、下划线及连字符，不是运行器的测试集或完整用例标识。
@@ -79,7 +79,7 @@
 
 ## 6. 定向生成和完成检查
 
-保存素材后，使用工具的 `--extract`（定向生成），或运行 `python -B -m dev_tools.button_extract --module <完整模块路径> --json`（只生成指定模块）。模块参数按完整路径精确匹配，可重复传入多个；父模块不表示包含所有子目录。执行位置仍为当前工作树根目录。
+保存素材后，使用工具的 `--extract`（定向生成），或运行 `python -B -m dev_tools.assets.button_extract --module <完整模块路径> --json`（只生成指定模块）。模块参数按完整路径精确匹配，可重复传入多个；父模块不表示包含所有子目录。执行位置仍为当前工作树根目录。
 
 不要无参数运行全量生成器：当前全量分支会删除旧包装文件后重建。定向模式只重写选中模块的包装文件，避免影响其他模块，仍需检查差异，不手改 `assets_*.py`（生成包装）。源图暂存使用独立的素材暂存工具，不能用全量生成代替。
 

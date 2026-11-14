@@ -2,9 +2,9 @@
 
 本文件规定 asset name（资源名）、源图目录、生成 wrapper（包装文件）、task（任务）文件组织，以及从调度任务或 UI 元素定位实现入口的方法。
 
-切图统一使用 `dev_tools.asset_crop`（切图工具）。入口选择、参数、框选、配方及输出限制见 `asset-crop-tool.md`（切图用法）；先预检，再保存源素材和定向生成包装。
+切图统一使用 `dev_tools.assets.asset_crop`（切图工具）。入口选择、参数、框选、配方及输出限制见 `asset-crop-tool.md`（切图用法）；先预检，再保存源素材和定向生成包装。
 
-重复或闲置源图可用 `dev_tools.asset_archive`（素材暂存工具）移出素材目录，详细步骤见 `asset-archive-tool.md`（素材暂存用法）。移动基础图前检查同名属性和多帧依赖；移动属性图后重新生成包装，不能把“属性图未在业务代码引用”当作闲置依据。
+重复或闲置源图可用 `dev_tools.assets.asset_archive`（素材暂存工具）移出素材目录，详细步骤见 `asset-archive-tool.md`（素材暂存用法）。移动基础图前检查同名属性和多帧依赖；移动属性图后重新生成包装，不能把“属性图未在业务代码引用”当作闲置依据。
 
 ## 1. 先定位归属再新增
 
@@ -77,7 +77,7 @@ assets/share/activity/special/26_6_25/FREE_GACHA.png
 - 一个 module 路径生成一个 `assets_<module>.py`。
 - 业务代码从生成文件显式 `from ... import ...`；assets import 不使用运行时动态查找。
 - 不要假设 scheduler task 名就是 owner 目录名。`SpecialActivity` 的 owner 是 `activity`，这是合法且常见的分层。
-- 修改源图后使用切图工具的 `--extract`（定向生成），或运行 `python -B -m dev_tools.button_extract --module <完整模块路径>`（生成指定模块），再检查包装。默认不运行会删除旧文件的全量模式，绝不手改生成文件。
+- 修改源图后使用切图工具的 `--extract`（定向生成），或运行 `python -B -m dev_tools.assets.button_extract --module <完整模块路径>`（生成指定模块），再检查包装。默认不运行会删除旧文件的全量模式，绝不手改生成文件。
 
 ## 4. Asset Name 语义规范
 
