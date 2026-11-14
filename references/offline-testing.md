@@ -9,7 +9,7 @@
 | 文件 | 核对内容 |
 | --- | --- |
 | `TESTING_PLAN.md`（验收计划） | 支持范围、阶段状态、已验证证据与待办。 |
-| `dev_tools/run_offline_tests.py`（统一入口） | 参数、白名单测试集、准备检查、设备隔离和报告实现。 |
+| `dev_tools/testing/run_offline_tests.py`（统一入口） | 参数、白名单测试集、准备检查、设备隔离和报告实现。 |
 | `tests/inventory.json`（分类清单） | 来源、业务、类别、设备需求、自动断言、迁移状态及排除原因。 |
 | `tests/baseline.json`（迁移基线） | 原用例完整标识、结果、样本、解释器、依赖和模型记录。 |
 | `tests/fixtures/<业务目录>/manifest.json`（对应业务的样本清单，实际路径以加载器为准） | 编号到路径、校验值、服务器、场景和使用用例的映射。 |
@@ -46,7 +46,7 @@
 1. 找到最小输入、支持服务器及预期结果。已有用例覆盖就复用；缺少时增加针对问题的用例。修复识别或流程问题，尽可能先证明用例能复现失败，再改业务。
 2. 规则用例断言边界和结果；模板或识别用例同时包含正例、反例及位置对应；流程用例断言连续帧、动作顺序、禁止动作、最终状态，不能只有“不抛异常”。
 3. 复用公共辅助。测试模块不通过实例化另一个测试类获取工具。新增通用读图、配置、模拟动作或诊断能力放辅助层；不要为了测试报告重构业务状态机。
-4. 更新分类清单、样本引用和必要的运行器白名单，用列出命令确认新用例、类别和样本关联正确。清单生成脚本服务于历史迁移，重跑前检查是否会覆盖新增记录；不要把它当作日常自动追加工具。
+4. 更新分类清单、样本引用和必要的运行器白名单，用列出命令确认新用例、类别和样本关联正确。已完成的一次性清单生成脚本归档到忽略缓存；日常直接维护清单并运行一致性检查，不重跑历史生成器覆盖新增记录。
 5. 先运行单个用例，再运行相关测试集。业务或资产修改运行所属业务的完整测试集；公共测试辅助修改运行所有使用它的相关测试集；修改运行器、锁定依赖或工作流后运行默认全集和受控负向检查。仅文档修改做文档验证即可。
 6. 查看报告，按实际结果更新计划的验收记录。只有新增修改、失败或未解决疑点才扩大或重复验证；依赖或环境变更、迁移验收需同环境连续两次结果一致。
 
@@ -79,16 +79,16 @@
 在仓库根目录使用以下命令；本机将 `python`（解释器）替换为上述虚拟环境路径：
 
 ```text
-python -B -m dev_tools.run_offline_tests --list
-python -B -m dev_tools.run_offline_tests --suite <已登记测试集>
-python -B -m dev_tools.run_offline_tests --case <完整用例标识>
-python -B -m dev_tools.run_offline_tests --suite all --coverage
-python -B -m dev_tools.check_offline_negative
+python -B -m dev_tools.testing.run_offline_tests --list
+python -B -m dev_tools.testing.run_offline_tests --suite <已登记测试集>
+python -B -m dev_tools.testing.run_offline_tests --case <完整用例标识>
+python -B -m dev_tools.testing.run_offline_tests --suite all --coverage
+python -B -m dev_tools.testing.check_offline_negative
 ```
 
 `--list`（只列出）不执行测试，但仍需足够依赖以导入用例；列出成功不等于模型与样本预检或测试通过。`--case`（单用例）从列出的完整标识复制；`--suite`（测试集）以入口当前白名单为准。不要把示例占位符原样执行。
 
-从其他工作目录启动时，以当前工作树解释器运行该工作树 `dev_tools/run_offline_tests.py`（入口文件）的绝对路径；入口从自身位置确定仓库。不要依赖全局模块搜索路径或主检出目录的代码。
+从其他工作目录启动时，以当前工作树解释器运行该工作树 `dev_tools/testing/run_offline_tests.py`（入口文件）的绝对路径；入口从自身位置确定仓库。不要依赖全局模块搜索路径或主检出目录的代码。
 
 | 退出码 | 含义 |
 | --- | --- |
