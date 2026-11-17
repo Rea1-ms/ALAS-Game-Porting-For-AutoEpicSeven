@@ -1,20 +1,28 @@
 ---
 name: alas-game-porting-for-autoepicseven
 description: >
-  Load when the user asks to develop, port, debug, review, or test AutoEpicSeven/E7 automation: ALAS state loops, pages/routes, assets/cropping, OCR, server/language dispatch, config visibility, scheduling, event calendars/archival, offline replay, coverage, CI, or commit messages. Also load for explicit $alas-game-porting-for-autoepicseven requests. Do not use for Epic Seven gameplay advice, unrelated Python/testing projects, or standalone Alasio/frontend migration.
+  Load when the user asks to develop, port, debug, review, or test AutoEpicSeven/E7 automation: ALAS state loops, pages/routes, assets/cropping, OCR, server/language dispatch, config visibility, scheduling, event calendars/archival, offline replay, coverage, uv dependencies, CI, or commit messages. Also load for explicit $alas-game-porting-for-autoepicseven requests. Do not use for Epic Seven gameplay advice, unrelated Python/testing projects, or standalone Alasio/frontend migration.
 ---
 
 # AutoEpicSeven ALAS Game Porting
 
-Version: 0.8 (2026-10-30)
+Version: 0.9 (2026-11-06)
 
 把 AutoEpicSeven 当作已经成熟的 E7 自动化项目直接开发。先读当前仓库代码、git 差异和本 skill 的参考资料。
+
+## 技能维护与同步
+
+- 本技能的主文件、参考资料及配套文件统一先在独立技能仓库维护。本机源码目录为 `D:/Files/Skills/alas-game-porting-for-autoepicseven`（独立技能目录）；其他机器先确认其独立源码位置。
+- `.cc-switch/skills/`（用户安装目录）、`.agents/skills/`（代理技能目录）及其他已安装副本只用于加载或同步，不在这些目录单独维护规则。业务代码仍只修改当前项目工作树。
+- 修改前比较独立源码与已识别安装目标的文件、版本状态和链接关系；已有差异先核对内容，把仍有效的修改合并回独立源码，再完成本次修改，不凭时间或版本号直接覆盖。
+- 源码检查完成后，再同步到已识别的安装目标；链接指向同一目录时只同步实际目标。只更新技能文件，保留 `.git`（版本元数据）、编辑器配置和无关文件。逐项核对文件清单与内容一致，未完成的目标明确说明。
+- 项目通过 Git submodule（Git 子模块）引用具体提交，正常检出会显示完整文件。需要更新引用时，按本次授权先在独立仓库提交，再更新子模块引用。
 
 ## Always Read
 
 - `references/autoepicseven-rules.md`：仓库硬约束、资产、OCR、页面、分服、测试与调度规则。
 - 本文件的任务路由和状态循环底线。
-- 修改业务、识别、页面、测试或工作流时，读取 `references/offline-testing.md`（离线测试与验收），再核对当前工作树的验收计划、统一入口与清单；用户没要求写测试也适用。
+- 修改业务、识别、页面、测试或工作流时，读取 `references/offline-testing.md`（离线测试与验收），再核对当前工作树的 `TESTING_PLAN.md`（总计划）、`testing_records/`（日期记录）、统一入口与清单；用户没要求写测试也适用。
 
 ## Task Routing
 
@@ -30,14 +38,16 @@ Version: 0.8 (2026-10-30)
 | OCR（文字识别）、重复识字、长名、资源栏或语言问题 | `references/autoepicseven-rules.md` 的 OCR 章节、`references/development-lessons.md` 的 OCR 经验、`references/recognition-and-decision.md#静态姓名与动态面板复用`、`references/recognition-and-decision.md#长名与相邻属性分开排查` |
 | 棋盘边框缺失、占格不全或下场后无法放回 | `references/recognition-and-decision.md#定位锚点与完整占格`、`references/development-lessons.md#重复分支与恢复往返`；按 `references/offline-testing.md` 验证完整往返 |
 | 战败回合不变、短暂结果漏拍 | `references/recognition-and-decision.md#战斗返回与生命变化`、`references/offline-testing.md`；先核对本次战斗及完整返回证据 |
-| 滚动漏读、偏好回退、分阶段预算、集合属性决策、领奖或结果采样 | `references/recognition-and-decision.md`（识别与决策经验）、`references/offline-testing.md`（离线测试与验收） |
+| 滚动漏读、偏好回退、未决策略与禁用分支、分阶段预算、集合属性决策、领奖或结果采样 | `references/recognition-and-decision.md`（识别与决策经验）、`references/offline-testing.md`（离线测试与验收） |
 | 活动更新、活动与赛季时间表、分服对齐或过期玩法归档 | `references/activity-maintenance.md`（活动维护）；涉及配置显隐时同时读 `references/wiki-guidance.md#配置项显示与隐藏`，实现与验证仍按离线规范 |
 | 新增任务配置、调整选项显示或隐藏、GUI（图形界面）、调度入口 | `references/task-checklist.md` 的配置章节、`references/wiki-guidance.md#配置项显示与隐藏`（先区分固定隐藏、字段联动与整项任务入口） |
 | 修复识别、流程问题；新增测试、样本、回放或覆盖率 | `references/offline-testing.md`、`references/development-lessons.md`，按统一入口验证 |
+| 安装环境、运行与开发依赖分组、uv（依赖管理工具）或锁文件维护 | `references/dependencies.md`（依赖约定）；依赖或工作流实际变更同时读离线规范 |
 | 测试依赖、云端工作流、失败报告或迁移验收 | `references/offline-testing.md` 的入口、报告及云端章节，核对当前工作树实际实现 |
+| 拆分验收计划、整理日期记录、文档索引或临时占位 | `references/offline-testing.md#验收文档整理`（归档与引用规则）；只改说明时检查文档，不重跑游戏回归 |
 | 新增、移动或整理开发工具、截图辅助与一次性脚本 | `references/dev-tools.md`（工具分类与新增规则）；涉及测试入口时同时读离线规范 |
 | 拟写提交说明或准备提交 | `references/autoepicseven-rules.md#提交信息`，先核对实际差异与已有提交风格 |
-| 维护或验收本 skill（技能） | `references/skill-evals.md`；先固定题目与判据，再改规则，分开记录静态检查与模型验收 |
+| 维护、同步或验收本 skill（技能） | 先按“技能维护与同步”确认独立源码与安装目标，再读 `references/skill-evals.md`；先固定题目与判据，再改规则，分开记录静态检查与模型验收 |
 | 其他 AutoEpicSeven 开发 | 扫描所有参考文件标题，只读取与当前任务直接相关的章节 |
 
 ## Execution Defaults
@@ -70,6 +80,8 @@ Version: 0.8 (2026-10-30)
 
 ## Known Gotchas
 
+- 开发组默认随项目安装；仅装开发组会缺少运行依赖，安装预演也不代表环境或回归已验证。
+  -> `references/dependencies.md`（分组、锁文件与验证范围）
 - 普通和恢复入口统一遵守“状态确认即处理”：各动作独立限制自身重试，其余状态和退出判断持续参与当前帧判定；点击请求与目标确认分别记录。
   -> `references/development-lessons.md#点击间隔与未生效请求`、`references/development-lessons.md#重复分支与恢复往返`
 - 姓名、动态面板和待确认动作分别保存；局部字形可复用不等于旧刻印、旧坐标或旧余额可以授权操作。
@@ -90,6 +102,11 @@ Version: 0.8 (2026-10-30)
 
 - 切图工具的实机入口即使预检也会连接设备；采样目录不是正式测试集，生成包装默认按模块过滤。
   -> `references/asset-crop-tool.md`
+
+- 空计数原图的非黑边界可能只有一个标记；先核对真实数字的完整范围，再保存 `.AREA`（识别区域）属性，不手改包装。
+  -> `references/asset-task-conventions.md#5-frame-与属性覆盖`
+- 未决优先级、明确禁用与临时不可用分别处理；按策略源判断是否暂停，禁用分支仍参与完整识别。
+  -> `references/recognition-and-decision.md#未决策略与禁用分支`
 
 - 新测试文件不会仅因位于 `tests/` 就进入默认集；必须登记白名单并通过列出命令确认。缺样本或模型不能跳过，断言不能放宽。
   -> `references/offline-testing.md#3-新增或修复一个问题`
@@ -125,6 +142,8 @@ Version: 0.8 (2026-10-30)
 
 ## Completion Checklist
 
+- [ ] 涉及技能修改时，先在独立源码完成并检查，再同步已识别安装目标；有效差异已合并，文件清单与内容一致，提交引用状态另行核对
+- [ ] 涉及依赖时，已区分运行与开发组，同步配置和锁文件，核对两种安装命令，并分别记录预演、实际安装与回归范围
 - [ ] 开发工具已按用途归类，入口与技能引用同步，一次性脚本和运行产物未进入正式工具目录
 - [ ] 当前 worktree、服务器范围、页面进出和成功条件已确认
 - [ ] 涉及识别或选择时，已核对字段完整性、资源含义、完整集合、上下文与缓存期限，以及用户允许的回退和后续预算
